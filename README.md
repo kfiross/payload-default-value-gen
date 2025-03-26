@@ -20,7 +20,6 @@ export default buildConfig({
       // function to generate each time to
       defaultFunc: () => uuidv4()
     })
-    // storage-adapter-placeholder
   ],
 })
 ```
