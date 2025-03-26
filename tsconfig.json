@@ -6,12 +6,11 @@
       "ES2020"
     ],
     "rootDir": "./",
-    "allowJs": true,
     "outDir": "dist",
     "declaration": true,
     "skipLibCheck": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "node",
+    "allowJs": true
   },
   "include": ["src"],
 }
