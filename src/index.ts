@@ -1,4 +1,3 @@
-// @ts-ignore
-import {genDefaultValueForIdPlugin} from "./genDefaultValueForIdPlugin";
+import {genDefaultValueForIdPlugin} from "./plugin/genDefaultValueForIdPlugin.js";
 
 export {genDefaultValueForIdPlugin};
