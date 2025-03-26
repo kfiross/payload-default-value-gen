@@ -5,7 +5,7 @@
   "homepage:": "https://github.com/kfiross/payload-default-value-gen-plugin",
   "description": "Generating default-value function (like uuid) plugin for Payload CMS",
   "license": "MIT",
-  "type": "module",
+  "type": "commonjs",
   "keywords": [
     "payload",
     "cms",
