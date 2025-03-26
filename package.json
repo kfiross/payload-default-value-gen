@@ -1,11 +1,11 @@
 {
   "name": "payload-default-value-gen",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Kfir Matityhau<kfir25812@gmail.com>",
   "homepage:": "https://github.com/kfiross/payload-default-value-gen-plugin",
   "description": "Generating default-value function (like uuid) plugin for Payload CMS",
   "license": "MIT",
-  "type": "module",
+  "type": "commonjs",
   "keywords": [
     "payload",
     "cms",
@@ -17,42 +17,45 @@
   ],
   "exports": {
     ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./providers": {
+      "import": "./dist/esm/providers/index.js",
+      "types": "./dist/types/providers/index.d.ts"
     },
     "./client": {
-      "import": "./src/exports/client.ts",
-      "types": "./src/exports/client.ts",
-      "default": "./src/exports/client.ts"
+      "import": "./dist/esm/client/index.js",
+      "types": "./dist/types/client/index.d.ts"
     },
-    "./rsc": {
-      "import": "./src/exports/rsc.ts",
-      "types": "./src/exports/rsc.ts",
-      "default": "./src/exports/rsc.ts"
+    "./client/hooks": {
+      "import": "./dist/esm/client/hooks.js",
+      "types": "./dist/types/client/hooks.d.ts"
+    },
+    "./collection": {
+      "import": "./dist/esm/collection/index.js",
+      "types": "./dist/types/collection/index.d.ts"
+    },
+    "./collection/hooks": {
+      "import": "./dist/esm/collection/hooks.js",
+      "types": "./dist/types/collection/hooks.d.ts"
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "index.d.ts"
+    "src",
+    "dist"
   ],
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "pnpm build:types && pnpm copyfiles",
-    "build:types": "tsc --rootDir ./src --module esnext --target es2020 --moduleResolution node --esModuleInterop --forceConsistentCasingInFileNames --strict --skipLibCheck",
-    "clean": "rimraf {dist,*.tsbuildinfo}",
-    "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
-    "dev": "payload run ./dev/server.ts",
-    "dev:generate-importmap": "pnpm dev:payload generate:importmap",
-    "dev:generate-types": "pnpm dev:payload generate:types",
-    "dev:payload": "cross-env PAYLOAD_CONFIG_PATH=./dev/payload.config.ts payload",
-    "lint": "eslint",
-    "lint:fix": "eslint ./src --fix",
-    "prepublishOnly": "pnpm clean && pnpm build",
-    "test": "jest"
+    "build": "bun run ./script/build.ts",
+    "format": "bun x prettier --write '**/*.{js,jsx,ts,tsx,json,md,yaml,yml}'",
+    "release": "bun run build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "2.27.10",
+    "@tsconfig/node22": "22.0.0",
+    "@types/bun": "latest",
     "@eslint/eslintrc": "^3.3.1",
     "@payloadcms/db-mongodb": "3.29.0",
     "@payloadcms/db-postgres": "3.29.0",
@@ -86,10 +89,6 @@
   },
   "peerDependencies": {
     "payload": "latest"
-  },
-  "engines": {
-    "node": "^18.20.2 || >=20.9.0",
-    "pnpm": "^9"
   },
   "publishConfig": {
     "exports": {
