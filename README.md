@@ -16,7 +16,7 @@ export default buildConfig({
     // ..other plugins
     genDefaultValueForIdPlugin({
       // list of collection(s) to apply 
-      collections: ['slog_name_1', 'slug_name_2'],
+      collections: ['slug_name_1', 'slug_name_2'],
       // function to generate each time to
       defaultFunc: () => uuidv4()
     })
