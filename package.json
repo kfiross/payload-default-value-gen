@@ -1,6 +1,6 @@
 {
   "name": "payload-default-value-gen",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "author": "Kfir Matityhau<kfir25812@gmail.com>",
   "homepage:": "https://github.com/kfiross/payload-default-value-gen-plugin",
   "description": "Generating default-value function (like uuid) plugin for Payload CMS",
