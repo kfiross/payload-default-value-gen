@@ -1,11 +1,11 @@
-import type {CollectionSlug, Config} from 'payload'
+import type {Config} from 'payload'
 
 
-export type PluginOptions = {
+type PluginOptions = {
   /**
    * List of collections to generate for them default value for the id field
    */
-  collections: CollectionSlug[]
+  collections: string[]
   defaultFunc: () => any
   disabled?: boolean
 }
@@ -33,7 +33,7 @@ export const genDefaultValueForIdPlugin =
         return config
       }
 
-      if(pluginOptions?.collections){
+      if(!pluginOptions.collections){
         return config;
       }
 
