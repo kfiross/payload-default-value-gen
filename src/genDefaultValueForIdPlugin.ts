@@ -5,7 +5,7 @@ export type PluginOptions = {
   /**
    * List of collections to generate for them default value for the id field
    */
-  collections?: Partial<Record<CollectionSlug, true>>
+  collections: CollectionSlug[]
   defaultFunc: () => any
   disabled?: boolean
 }
@@ -33,8 +33,12 @@ export const genDefaultValueForIdPlugin =
         return config
       }
 
+      if(pluginOptions?.collections){
+        return config;
+      }
+
       for (let collection of config.collections) {
-        if (config.collections.map(c => c.slug).includes(collection.slug)) {
+        if (pluginOptions.collections.includes(collection.slug)) {
           collection.hooks = collection.hooks || {}
 
           collection.hooks.beforeValidate = [
