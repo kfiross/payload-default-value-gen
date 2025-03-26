@@ -1,2 +1,3 @@
-import {genDefaultValueForIdPlugin} from "./genDefaultValueForIdPlugin";
+import {genDefaultValueForIdPlugin} from "./genDefaultValueForIdPlugin.js";
+
 export default {genDefaultValueForIdPlugin};
