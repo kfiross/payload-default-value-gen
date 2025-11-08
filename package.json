@@ -73,6 +73,7 @@
     "payload": "^3.37.0"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       ".": {
         "import": "./dist/esm/index.js",
