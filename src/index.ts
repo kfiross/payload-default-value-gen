@@ -1,57 +1,86 @@
-import type {Config} from 'payload'
+import type { Config, CollectionSlug } from 'payload'
 
+/**
+ * Generic auto-increment helper
+ */
+export const autoIncrementFunc = async <T extends string = 'id'>(
+  req: any,
+  slug: string,
+  field: T = 'id' as T,
+): Promise<number> => {
+  const latest = await req.payload.find({
+    collection: slug,
+    sort: `-${field}`,
+    limit: 1,
+  })
+
+  const value = latest?.docs?.[0]?.[field]
+
+  if (value == null) return 1
+
+  const numericValue = Number(value)
+  if (Number.isNaN(numericValue)) {
+    throw new Error(
+      `autoIncrementFunc: Field "${field}" in collection "${slug}" is not numeric (got: ${JSON.stringify(
+        value,
+      )})`,
+    )
+  }
+
+  return numericValue + 1
+}
+
+type DefaultFunc = (
+  req: any,
+  slug: string,
+  field?: string,
+) => Promise<number | string> | number | string
 
 type PluginOptions = {
-  /**
-   * List of collections to generate for them default value for the id field
-   */
-  collections: string[]
-  defaultFunc: () => any
+  collections: {
+    [key in CollectionSlug]?: {
+      defaultFunc: DefaultFunc
+    }
+  }
   disabled?: boolean
 }
 
 /**
  * Generating default-value-function (like uuid) plugin function.
- *
- * @param {PluginOptions} pluginOptions
- * @returns {Plugin}
  */
 export const genDefaultValueForIdPlugin =
   (pluginOptions: PluginOptions) =>
-    (incomingConfig: Config): Config => {
-      // create copy of incoming config
-      let config = {...incomingConfig}
-      if (!config.collections) {
-        config.collections = []
-      }
+  (config: any): any => {
+    if (!config.collections) config.collections = []
+    if (pluginOptions.disabled) return config
+    if (!pluginOptions.collections) return config
 
-      /**
-       * If the plugin is disabled, do nothing
-       * If your plugin heavily modifies the database schema, you may want to remove this property.
-       */
-      if (pluginOptions.disabled) {
-        return config
-      }
+    for (const collection of config.collections) {
+      const collectionOptions = pluginOptions.collections[collection.slug as CollectionSlug]
+      if (!collectionOptions) continue
 
-      if(!pluginOptions.collections){
-        return config;
-      }
+      collection.hooks = collection.hooks || {}
 
-      for (let collection of config.collections) {
-        if (pluginOptions.collections.includes(collection.slug)) {
-          collection.hooks = collection.hooks || {}
+      // Normalize existing beforeValidate hooks to an array
+      const existing = collection.hooks.beforeValidate
+      const normalized: any[] = existing
+        ? Array.isArray(existing)
+          ? [...existing]
+          : [existing]
+        : []
 
-          collection.hooks.beforeValidate = [
-            ...((collection.hooks.beforeValidate as any[]) || []),
-            ({data}) => {
-              if (data && !data.id) {
-                return {...data, id: pluginOptions.defaultFunc()}
-              }
-              return data
-            },
-          ]
-        }
-      }
+      normalized.push(async ({ data, req, operation }: any) => {
+        if (operation !== 'create') return data
+        if (data?.id) return data
 
-      return config
+        // Generate next ID (defaultFunc may be sync or async)
+        const nextId = await collectionOptions.defaultFunc(req, collection.slug)
+
+        return { ...data, id: nextId }
+      })
+
+      collection.hooks.beforeValidate = normalized
     }
+
+    return config
+  }
