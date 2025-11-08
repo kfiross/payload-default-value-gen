@@ -73,16 +73,16 @@
     "payload": "^3.37.0"
   },
   "publishConfig": {
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "types": "./dist/types/index.d.ts",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "./dist/cjs/index.cjs",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts"
+    "exports": {
+      ".": {
+        "import": "./dist/esm/index.js",
+        "types": "./dist/types/index.d.ts",
+        "require": "./dist/index.cjs"
+      }
+    },
+    "main": "./dist/cjs/index.cjs",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/types/index.d.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

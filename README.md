@@ -2,8 +2,8 @@
 
 Plugin for Payload CMS, which enables generating custom default-value function (like uuid) for colletions
 
-
 # Usage
+
 Under `payload.config.ts`:
 
 ```ts
@@ -26,3 +26,4 @@ export default buildConfig({
     })
   ],
 })
+```
